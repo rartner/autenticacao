@@ -23,19 +23,6 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<?> salvar(@RequestBody Usuario usuario) {
-        if (usuario.getId() == null) {
-            return ResponseEntity
-                    .status(HttpStatus.OK)
-                    .body(usuarioRepository.saveAndFlush(usuario));
-        } else {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("Usuário já cadastrado");
-        }
-    }
-
-    @PostMapping("editar")
-    public ResponseEntity<?> editar(@RequestBody Usuario usuario) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(usuarioRepository.saveAndFlush(usuario));

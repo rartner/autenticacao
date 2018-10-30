@@ -10,6 +10,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
@@ -26,15 +28,16 @@ public class WebSecurityConfigAdapter extends WebSecurityConfigurerAdapter {
         if (usuarioRepository.count() == 0) {
             Usuario usuario = new Usuario();
             usuario.setLogin("admin");
-            usuario.setSenha("admin123");
+            usuario.setSenha(passwordEncoder().encode("admin"));
             usuarioRepository.save(usuario);
         }
 
-        builder.userDetailsService(login -> new UsuarioCustomDTO(usuarioRepository.findByLogin(login)));
+        builder.userDetailsService(login -> new UsuarioCustomDTO(usuarioRepository.findByLogin(login)))
+                .passwordEncoder(passwordEncoder());
     }
 
-//    @Bean
-//    public static NoOpPasswordEncoder passwordEncoder() {
-//        return (NoOpPasswordEncoder) NoOpPasswordEncoder.getInstance();
-//    }
+    @Bean
+    public static BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 }
